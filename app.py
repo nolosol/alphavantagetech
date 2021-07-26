@@ -19,11 +19,6 @@ def index(sym,methods=["POST","GET"]):
         sym_name.update({items["1. symbol"]:items["2. name"]})
     print(sym)
     return jsonify(sym_name)
-@app.route("/test")
-def indexx():
-    str_url="http://127.0.0.1:5000/df"
-    data= requests.get(str_url).json()
-    return jsonify(data)
 @app.route("/grid/<sym>")
 def showgrid(sym,methods=["POST","GET"]):
     print(sym)
