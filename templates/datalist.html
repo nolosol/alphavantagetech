@@ -1,0 +1,657 @@
+<html>
+<head>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-image: url('https://i.ibb.co/WkxVkzk/img1.jpg');
+  padding: 25px;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  background-size: 1500px 1500px;
+  
+}
+label{
+font-weight: bold;
+}
+input[type=text,dataList], dataList{
+	
+	border-radius:0.9em;
+	        width: 150px;
+        height: 50px;
+		border: 2px solid  gray;
+}
+div{
+width:900px;
+}
+
+
+
+/* Style the header */
+header {
+  background-color:#A9BA9D;
+  padding: 10px;
+  text-align: center;
+  font-size: 15px;
+  color: white;
+  margin-top:50px;
+  border-radius:0.9em;
+}
+
+/* Clear floats after the columns */
+section::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the footer */
+footer {
+  background-color: #B2D3C2;
+  padding: 10px;
+  text-align: center;
+  color: white;
+  border-radius:0.9em;
+}
+h2{
+color: white;
+}
+
+
+input::-webkit-calendar-picker-indicator {
+  display: none;/* remove default arrow */
+}
+.myarrow:after {
+    content: url(https://i.stack.imgur.com/i9WFO.png);
+    margin-left: -20px; 
+    padding: .1em;
+    pointer-events:none;
+}
+.allow-scroll {
+    height: 250px;
+
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+.table-wrapper
+{
+    border: 1px solid red;
+    width: auto;
+    height: 50px;
+    overflow: auto;
+}
+
+table
+{
+    border: 1px solid black;
+    margin-left: 10px;
+}
+
+td
+{
+    width: auto;
+    height: auto;
+    background-color: #ccc;
+}
+.column {
+  float: left;
+  width: 10.5%;
+  height:40%
+  padding: 10px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+  width:100%;
+}
+/* Style the buttons */
+.btn {
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  background-color: #f1f1f1;
+  cursor: pointer;
+  
+}
+
+.btn:hover {
+  background-color: #ddd;
+}
+
+.btn.active {
+  background-color: #666;
+  color: white;
+}
+#btnContainer,#company_details,#Historical_data,#Global_Quote,#indicator,#daily_table_div,#weekly_table_div,#monthly_table_div,#div_daily,#div_intraday,#div_monthly,#div_weekly,#indicator_table_div{
+position:absolute;
+visibility:hidden;
+}
+</style>
+<script>
+function showHint(str) {
+    if (str.length == 0) {
+        return;
+    } else {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {				
+				if (this.readyState == 4 && this.status == 200) {
+							var tst=document.getElementById("nameb").value;
+							var tst1=document.getElementById("browsers").options;
+							var dataList = document.getElementById('browsers');
+							var input = document.getElementById('nameb');
+							var datalist_options_len= document.getElementById("browsers").options.length;
+							var jsonOptions =JSON.parse(this.responseText);
+							options=''
+							for(i in jsonOptions  ){
+									options += '<option value="'+i+'"/>'+jsonOptions[i]+"</option>";
+								}
+							document.getElementById('browsers').innerHTML = options;
+							input.placeholder = "e.g. ";
+							for(let i =0; i <= datalist_options_len; i++){
+									var x = document.getElementById("browsers").options[i].value;
+									var tst=document.getElementById("nameb").value;
+									if (tst == x){
+									        var edit = document.getElementById("btnContainer");
+											var company_details = document.getElementById("company_details");
+											edit.style.visibility = "visible";
+											company_details.style.visibility = "visible";
+											var xmlhttps = new XMLHttpRequest();
+											xmlhttps.onreadystatechange = function() {
+													if (this.readyState == 4 && this.status == 200) {
+															var jsonOptionss =JSON.parse(this.responseText);
+															for(i in jsonOptionss  ){
+														document.getElementById('p_'+i).innerHTML =jsonOptionss[i];
+														document.getElementById('h6_'+i).innerHTML =i;
+																}
+														}
+												};
+											xmlhttps.open("GET", "https://alphavantagetech.azurewebsites.net/grid/"+str, true);
+											xmlhttps.send();
+										}
+								}
+					}
+			
+			};
+			xmlhttp.open("GET", "https://alphavantagetech.azurewebsites.net/in/"+str, true);
+			xmlhttp.send();
+		}
+	}
+function allDivHiddenView() {
+  var Historical_data = document.getElementById("Historical_data");
+  Historical_data.style.visibility = "hidden";
+  var company_details = document.getElementById("company_details");
+  company_details.style.visibility = "hidden";  
+  var Global_Quote = document.getElementById("Global_Quote");
+  Global_Quote.style.visibility = "hidden";     
+  var  indicator = document.getElementById("indicator");
+   indicator.style.visibility = "hidden"; 
+  var indicator_table_div= document.getElementById("indicator_table_div");
+  indicator_table_div.style.visibility = "hidden";
+ 
+  
+  var div_intraday = document.getElementById("div_intraday");
+  div_intraday.style.visibility = "hidden";
+  var intraday_table_div = document.getElementById("intraday_table_div");
+  intraday_table_div.style.visibility = "hidden"; 
+  
+  var div_daily = document.getElementById("div_daily");
+  div_daily.style.visibility = "visible";  
+  var  daily_table_div = document.getElementById("daily_table_div");
+  daily_table_div.style.visibility = "hidden";   
+  
+  var div_weekly= document.getElementById("div_weekly");
+  div_weekly.style.visibility = "hidden";     
+  var weekly_table_div = document.getElementById("weekly_table_div");
+  weekly_table_div.style.visibility = "hidden";  
+  
+  var  div_monthly = document.getElementById("div_monthly");
+  div_monthly.style.visibility = "hidden";   
+  var monthly_table_div = document.getElementById("monthly_table_div");
+  monthly_table_div.style.visibility = "hidden";  
+     
+  
+
+}	
+function intradayView() {
+  allDivHiddenView()
+  var div_intraday = document.getElementById("div_intraday");
+  div_intraday.style.visibility = "visible";
+    var Historical_data = document.getElementById("Historical_data");
+  Historical_data.style.visibility = "visible";
+
+		
+	}
+function  intradayViewonchange(str) {
+    allDivHiddenView()	
+    intradayView()
+	var tst=document.getElementById("nameb").value;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {				
+			if (this.readyState == 4 && this.status == 200) {
+					var jsonOptions =JSON.parse(this.responseText);
+					var  intraday_table_div = document.getElementById("intraday_table_div");
+					intraday_table_div.style.visibility = "visible"; 
+					var table = document.getElementById("intraday_table");
+					table.innerHTML = "";
+					var header = table.createTHead();
+					var headerrow = header.insertRow(0);
+					var cell0 = headerrow.insertCell(0);
+					cell0.innerHTML = "Datetime";
+					k=0
+					for(i in jsonOptions  ){
+							k=k+1
+							var row = table.insertRow(1);
+							var cell1l = row.insertCell(0);
+							cell1l.innerHTML=i;
+							q=1
+							for (j in jsonOptions[i]){
+									if (k==1){
+											var cell0 = headerrow.insertCell(q);
+											cell0.innerHTML = j;
+										}
+									var cell = row.insertCell(q);
+									cell.innerHTML=jsonOptions[i][j];
+									q=q+1
+					
+								}
+					
+						}
+
+				}
+			
+		};
+	xmlhttp.open("GET", "https://alphavantagetech.azurewebsites.net/intraday/"+tst+"/"+str, true);
+	xmlhttp.send();
+		
+}
+function dailyView(str) {
+  allDivHiddenView()
+  var div_daily = document.getElementById("div_daily");
+  div_daily.style.visibility = "visible";  
+	var Historical_data = document.getElementById("Historical_data");
+    Historical_data.style.visibility = "visible";  
+	var tst=document.getElementById("nameb").value;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {				
+		if (this.readyState == 4 && this.status == 200) {
+					var jsonOptions =JSON.parse(this.responseText);
+					var  daily_table_div = document.getElementById("daily_table_div");
+					daily_table_div.style.visibility = "visible"; 
+					var table = document.getElementById("daily_table");
+					table.innerHTML = "";
+					var header = table.createTHead();
+					var headerrow = header.insertRow(0);
+					var cell0 = headerrow.insertCell(0);
+					cell0.innerHTML = "Date";
+					k=0
+					for(i in jsonOptions  ){
+							k=k+1
+							var row = table.insertRow(1);
+							var cell1l = row.insertCell(0);
+							cell1l.innerHTML=i;
+							q=1
+							for (j in jsonOptions[i]){
+									if (k==1){
+											var cell0 = headerrow.insertCell(q);
+											cell0.innerHTML = j;
+										}
+									var cell = row.insertCell(q);
+									cell.innerHTML=jsonOptions[i][j];
+									q=q+1
+					
+								}
+					
+						}
+			}
+			
+		};
+	xmlhttp.open("GET", "https://alphavantagetech.azurewebsites.net/dailyview/"+tst, true);
+	xmlhttp.send();
+		
+	}
+function weeklyView(str) {
+  allDivHiddenView()
+  var div_weekly= document.getElementById("div_weekly");
+  div_weekly.style.visibility = "visible";     
+	var Historical_data = document.getElementById("Historical_data");
+    Historical_data.style.visibility = "visible";  
+	var tst=document.getElementById("nameb").value;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {				
+		if (this.readyState == 4 && this.status == 200) {
+					var jsonOptions =JSON.parse(this.responseText);
+					var  weekly_table_div = document.getElementById("weekly_table_div");
+					weekly_table_div.style.visibility = "visible"; 
+					var table = document.getElementById("weekly_table");
+					table.innerHTML = "";
+					var header = table.createTHead();
+					var headerrow = header.insertRow(0);
+					var cell0 = headerrow.insertCell(0);
+					cell0.innerHTML = "Date";
+					k=0
+					for(i in jsonOptions  ){
+							k=k+1
+							var row = table.insertRow(1);
+							var cell1l = row.insertCell(0);
+							cell1l.innerHTML=i;
+							q=1
+							for (j in jsonOptions[i]){
+									if (k==1){
+											var cell0 = headerrow.insertCell(q);
+											cell0.innerHTML = j;
+										}
+									var cell = row.insertCell(q);
+									cell.innerHTML=jsonOptions[i][j];
+									q=q+1
+					
+								}
+					
+						}
+			}
+			
+		};
+	xmlhttp.open("GET", "https://alphavantagetech.azurewebsites.net/weeklyview/"+tst, true);
+	xmlhttp.send();
+		
+	}	
+function monthlyView(str) {
+  allDivHiddenView()
+  var  div_monthly = document.getElementById("div_monthly");
+  div_monthly.style.visibility = "visible"; 
+  	var Historical_data = document.getElementById("Historical_data");
+    Historical_data.style.visibility = "visible";  
+	var tst=document.getElementById("nameb").value;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {				
+		if (this.readyState == 4 && this.status == 200) {
+					var jsonOptions =JSON.parse(this.responseText);				
+					var  monthly_table_div = document.getElementById("monthly_table_div");
+					monthly_table_div.style.visibility = "visible"; 
+					var table = document.getElementById("monthly_table");
+					table.innerHTML = "";
+					var header = table.createTHead();
+					var headerrow = header.insertRow(0);
+					var cell0 = headerrow.insertCell(0);
+					cell0.innerHTML = "Date";
+					k=0
+					for(i in jsonOptions  ){
+							k=k+1
+							var row = table.insertRow(1);
+							var cell1l = row.insertCell(0);
+							cell1l.innerHTML=i;
+							q=1
+							for (j in jsonOptions[i]){
+									if (k==1){
+											var cell0 = headerrow.insertCell(q);
+											cell0.innerHTML = j;
+										}
+									var cell = row.insertCell(q);
+									cell.innerHTML=jsonOptions[i][j];
+									q=q+1
+					
+								}
+					
+						}
+			}
+			
+		};
+	xmlhttp.open("GET", "https://alphavantagetech.azurewebsites.net/monthlyview/"+tst, true);
+	xmlhttp.send();
+		
+	}		
+// List View
+function detailView() {
+  allDivHiddenView()
+  var company_details = document.getElementById("company_details");
+  company_details.style.visibility = "visible";
+ 
+}
+function Global_QuoteView() { 
+  allDivHiddenView()
+  var Global_Quote = document.getElementById("Global_Quote");
+  Global_Quote.style.visibility = "visible";   
+  	var tst=document.getElementById("nameb").value;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {				
+		if (this.readyState == 4 && this.status == 200) {
+				var jsonOptions =JSON.parse(this.responseText);
+				for(i in jsonOptions  ){
+						document.getElementById('pp_'+i).innerHTML =jsonOptions[i];
+						document.getElementById('hh6_'+i).innerHTML =i;
+					}
+			}
+			
+		};
+	xmlhttp.open("GET", "https://alphavantagetech.azurewebsites.net/GlobalQuoteView/"+tst, true);
+	xmlhttp.send();
+
+}
+function historicaldataView() {
+  allDivHiddenView()
+  var Historical_data = document.getElementById("Historical_data");
+  Historical_data.style.visibility = "visible";
+
+}
+
+function indicatorView(){
+  allDivHiddenView()  
+  var  indicator = document.getElementById("indicator");
+   indicator.style.visibility = "visible";
+}
+
+function indicatorSubmit(){
+  allDivHiddenView()  
+  var  indicator = document.getElementById("indicator");
+   indicator.style.visibility = "hidden";
+  	var tst=document.getElementById("nameb").value;
+	var time_period=document.getElementById("time_period").value;
+	var interval=document.getElementById("interval").value;
+	var series_type=document.getElementById("series_type").value;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {				
+		if (this.readyState == 4 && this.status == 200) {
+					var jsonOptions =JSON.parse(this.responseText);				
+                    var  indicator_table_div = document.getElementById("indicator_table_div")  
+                    indicator_table_div .style.visibility = "visible";
+					var table = document.getElementById("indicator_table");
+					var header = table.createTHead();
+					var headerrow = header.insertRow(0);
+					var cell0 = headerrow.insertCell(0);
+					cell0.innerHTML = "Date";				
+					k=0
+					for(i in jsonOptions  ){
+							k=k+1
+							var row = table.insertRow(k);
+							var cell1l = row.insertCell(0);
+							cell1l.innerHTML=i;
+							q=1
+							for (j in jsonOptions[i]){
+									if (k==1){
+											var cell0 = headerrow.insertCell(q);
+											cell0.innerHTML = j;
+										}
+									var cell = row.insertCell(q);
+									cell.innerHTML=jsonOptions[i][j];
+									q=q+1
+					
+								}
+					
+						}
+			}
+			
+		};
+	xmlhttp.open("GET", "https://alphavantagetech.azurewebsites.net/indicatorView/"+tst+"/"+time_period+"/"+interval+"/"+series_type, true);
+	xmlhttp.send();  
+}
+function increment() {
+    var time_period = document.getElementById('time_period');
+    var number = time_period.value;
+    number++;
+    document.getElementById('time_period').value = number;
+}
+</script>
+</head>
+<body>
+<h2>What is a Stock Market?</h2>
+<p>"A stock market, equity market, or share market is the aggregation of buyers and sellers of stocks (also called shares), which represent ownership claims on businesses; these may include securities listed on a public stock exchange, as well as stock that is only traded privately, such as shares of private companies which are sold to investors through equity crowdfunding platforms. Investment in the stock market is most often done via stockbrokerages and electronic trading platforms. Investment is usually made with an investment strategy in mind."</p>
+<p>
+   This site will help to invest smartly in equities market.
+</p>
+
+
+<header>
+  <h2>Equities Analyser </h2>
+</header>
+<section>
+
+ <div style="background-image: url('https://i.ibb.co/mcL9Bfn/img2.jpg');  float: left;
+  padding: 0px;
+  width: 100%;
+  background-color: #f1f1f1;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border-radius:0.2em;
+  display: inline-block;" >
+  <br>
+  <br>
+  <br>
+<label>Company name </label><span class="myarrow"><input list="browsers" name="browsers" id="nameb"  oninput="showHint(this.value)"></span>
+<datalist id="browsers"  >`
+<option>""</option>
+</datalist>
+<br>
+  <br>
+  <br>
+  <br>
+<div id="btnContainer">
+  <button class="btn" onclick="detailView()" ><i class="fa fa-bars" ></i>details</button> 
+  <button class="btn active" onclick="historicaldataView() "><i class="fa fa-th-large"></i> Historical_data</button>
+  <button class="btn" onclick="Global_QuoteView()"><i class="fa fa-bars"></i> Global Quote</button> 
+  <button class="btn active" onclick="indicatorView()"><i class="fa fa-th-large"></i>  indicator</button>
+</div>
+<br>
+<br>
+<br>
+<br>
+<div id="company_details">
+	<div class="row">
+		<div class="column" style="background-color:#aaa;"><h6 id="h6_symbol"></h6></div>
+		<div class="column" style="background-color:#bbb;"><h6 id="h6_name"></h6></div>
+		<div class="column" style="background-color:#aaa;"><h6 id="h6_type"></h6></div>
+		<div class="column" style="background-color:#bbb;"><h6 id="h6_region"></h6></div>
+		<div class="column" style="background-color:#aaa;"><h6 id="h6_marketOpen"></h6></div>
+		<div class="column" style="background-color:#bbb;"><h6 id="h6_marketClose"></h6></div>
+		<div class="column" style="background-color:#aaa;"><h6 id="h6_timezone"></h6></div>
+		<div class="column" style="background-color:#bbb;"><h6 id="h6_currency"></h6></div>
+		<div class="column" style="background-color:#aaa;"><h6 id="h6_matchScore"></h6></div>	
+
+	</div>
+
+	<div class="row">
+		<div class="column" style="background-color:#bbb;"><p id="p_symbol"></p></div>
+		<div class="column" style="background-color:#aaa;"><p id="p_name"></p></div>
+		<div class="column" style="background-color:#bbb;"><p id="p_type"></p></div>
+		<div class="column" style="background-color:#aaa;"><p id="p_region"></p></div>
+		<div class="column" style="background-color:#bbb;"><p id="p_marketOpen"></p></div>
+		<div class="column" style="background-color:#aaa;"><p id="p_marketClose"></p></div>
+		<div class="column" style="background-color:#bbb;"><p id="p_timezone"></p></div>
+		<div class="column" style="background-color:#aaa;"><p id="p_currency"></p></div>
+		<div class="column" style="background-color:#bbb;"><p id="p_matchScore"></p></div>
+	</div>
+</div>
+<div id="Historical_data">
+  <button class="btn" onclick="intradayView()" ><i class="fa fa-bars" ></i>Intraday</button> 
+  <button class="btn active" onclick="dailyView() "><i class="fa fa-th-large"></i> Daily</button>
+  <button class="btn" onclick="weeklyView()"><i class="fa fa-bars"></i> Weekly</button> 
+  <button class="btn active" onclick="monthlyView()"><i class="fa fa-th-large"></i> Monthly</button>
+  <div id="div_intraday">
+    <select id="intradayDropdown" onchange="intradayViewonchange(this.value)">
+		<option value="1min">1 min</option>
+		<option value="5min">5 min</option>
+		<option value="15min">15 min</option>
+		<option value="30min">30 min</option>
+		<option value="60min">60 min</option>
+	</select>
+	<div id="intraday_table_div" class="allow-scroll"><table  id="intraday_table"></table>	</div>
+  </div>
+    <div id="div_daily">
+    <div id="daily_table_div" class="allow-scroll"><table id="daily_table"></table></div>
+	</div>
+    <div id="div_weekly">	
+	<div id="weekly_table_div" class="allow-scroll"><table  id="weekly_table"></table></div>
+	</div>
+    <div id="div_monthly"> 
+	<div id="monthly_table_div" class="allow-scroll"><table  id="monthly_table"></table></div>
+	</div>  
+</div>  
+<div id="Global_Quote" style="width=900px;">
+		<div class="row" style="width=900px;">
+		<div class="column" style="background-color:#aaa;width:10%;"><h6 id="hh6_symbol"></h6></div>
+		<div class="column" style="background-color:#bbb;width:10%;"><h6 id="hh6_open"></h6></div>
+		<div class="column" style="background-color:#aaa;width:10%;"><h6 id="hh6_high"></h6></div>
+		<div class="column" style="background-color:#bbb;width:10%;"><h6 id="hh6_low"></h6></div>
+		<div class="column" style="background-color:#aaa;width:10%;"><h6 id="hh6_price"></h6></div>
+		<div class="column" style="background-color:#bbb;width:10%;"><h6 id="hh6_volume"></h6></div>
+		<div class="column" style="background-color:#aaa;width:10%;"><h6 id="hh6_latest_trading_day"></h6></div>
+		<div class="column" style="background-color:#bbb;width:10%;"><h6 id="hh6_previous_close"></h6></div>
+		<div class="column" style="background-color:#aaa;width:10%;"><h6 id="hh6_change"></h6></div>	
+		<div class="column" style="background-color:#bbb;width:10%;"><h6 id="hh6_change_percent"></h6></div>	
+		
+
+	</div>
+
+	<div class="row" >
+		<div class="column" style="background-color:#bbb;width:10%;"><p id="pp_symbol"></p></div>
+		<div class="column" style="background-color:#aaa;width:10%;"><p id="pp_open"></p></div>
+		<div class="column" style="background-color:#bbb;width:10%;"><p id="pp_high"></p></div>
+		<div class="column" style="background-color:#aaa;width:10%;"><p id="pp_low"></p></div>
+		<div class="column" style="background-color:#bbb;width:10%;"><p id="pp_price"></p></div>
+		<div class="column" style="background-color:#aaa;width:10%;"><p id="pp_volume"></p></div>
+		<div class="column" style="background-color:#bbb;width:10%;"><p id="pp_latest_trading_day"></p></div>
+		<div class="column" style="background-color:#aaa;width:10%;"><p id="pp_previous_close"></p></div>
+		<div class="column" style="background-color:#bbb;width:10%;"><p id="pp_change"></p></div>
+		<div class="column" style="background-color:#aaa;width:10%;"><p id="pp_change_percent"></p></div>
+	</div>
+
+
+</div>  
+<div id="indicator">
+    <label>interval</label>
+    <select id="interval">
+		<option value="1min">1 min</option>
+		<option value="5min">5 min</option>
+		<option value="15min">15 min</option>
+		<option value="30min">30 min</option>
+		<option value="60min">60 min</option>
+		<option value="daily">daily</option>
+		<option value="weekly">weekly</option>
+		<option value="monthly">monthly</option>		
+	</select>
+	<label>time_period</label>
+	<input id="time_period" type=number value="0"></input>
+    <label>series_type</label>
+    <select id="series_type">
+		<option value="close">close</option>
+		<option value="open">open</option>
+		<option value="high">high</option>
+		<option value="low">low</option>		
+	</select>	
+	<button onclick="indicatorSubmit()">submit</button>
+	 <div id="indicator_table_div" class="allow-scroll"><table  id="indicator_table" class="table-wrapper"></table></div>
+	
+</div>
+</div>
+
+</section>
+<footer>
+  <p>"Data taken from the publication," <link>www.alphavantage.co</link>"</p>
+</footer>
+</body>
+</html>
